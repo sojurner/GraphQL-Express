@@ -103,6 +103,20 @@ const mutation = new GraphQLObjectType({
       resolve(parentValue, args) {
         return axios.delete(`http://localhost:3000/users/${args.id}`);
       }
+    },
+    updateUser: {
+      type: UserType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        first_name: { type: GraphQLString },
+        age: { type: GraphQLInt },
+        companyId: { type: GraphQLString }
+      },
+      resolve(parentValue, args) {
+        return axios
+          .patch(`http://localhost:3000/users/${args.id}`, args)
+          .then(res => res.data);
+      }
     }
   }
 });
