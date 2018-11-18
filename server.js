@@ -1,16 +1,28 @@
 const express = require('express');
-const graphqlHTTP = require('express-graphql');
-const schema = require('./schema');
+const expressGraphQL = require('express-graphql');
+const bodyParser = require('body-parser');
 
+const schema = require('./schema/schema.js');
+const cors = require('cors');
+
+require('dotenv').config();
+const port = process.env.PORT;
 const app = express();
+
+app.use(cors());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  next();
+});
 
 app.use(
   '/graphql',
-  graphqlHTTP({
+  expressGraphQL({
     schema,
     graphiql: true
   })
 );
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server on Port:${5000}`));
+app.listen(port, () => console.log(`Server on Port:${port}`));
